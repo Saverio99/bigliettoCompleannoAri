@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Buon Compleanno Amore 🎂</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:   #f5f0e8;
+      --parchment: #ede5d0;
+      --ink:     #2c2416;
+      --moss:    #3d5a3e;
+      --sage:    #7a9e7e;
+      --amber:   #c97d2e;
+      --gold:    #e8c87a;
+      --blush:   #d4856a;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--ink);
+      font-family: 'Jost', sans-serif;
+      color: var(--ink);
+    }
+
+    /* ─── SLIDER ─────────────────────────────────────────────── */
+    .slider {
+      display: flex;
+      width: 100vw;
+      height: 100dvh;
+      overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .slider::-webkit-scrollbar { display: none; }
+
+    .slide {
+      flex: 0 0 100vw;
+      height: 100dvh;
+      scroll-snap-align: start;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── PROGRESS DOTS ──────────────────────────────────────── */
+    .dots {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 100;
+      pointer-events: none;
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      transition: all .4s ease;
+    }
+    .dot.active {
+      background: var(--gold);
+      width: 22px;
+      border-radius: 3px;
+    }
+
+    /* ─── SWIPE HINT ─────────────────────────────────────────── */
+    .swipe-hint {
+      position: absolute;
+      bottom: 56px;
+      right: 28px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Jost', sans-serif;
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      animation: hintPulse 2.5s ease-in-out infinite;
+    }
+    .swipe-hint svg { width:18px; height:18px; }
+    @keyframes hintPulse {
+      0%, 100% { opacity: .6; transform: translateX(0); }
+      50% { opacity: 1; transform: translateX(5px); }
+    }
+
+    /* ─── GRAIN OVERLAY ──────────────────────────────────────── */
+    .grain::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: .04;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       SLIDE 0 — LANDING
+    ════════════════════════════════════════════════════════════ */
+    .slide-0 {
+      background: var(--ink);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* big decorative circle */
+    .s0-circle {
+      position: absolute;
+      width: min(80vw, 480px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 38%, #4a3820 0%, #1e1508 100%);
+      box-shadow: 0 0 120px rgba(200,125,46,.18);
+      animation: floatCircle 6s ease-in-out infinite;
+    }
+    @keyframes floatCircle {
+      0%,100% { transform: translateY(0) scale(1); }
+      50%      { transform: translateY(-12px) scale(1.015); }
+    }
+
+    .s0-ring {
+      position: absolute;
+      width: min(82vw, 492px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 1px solid rgba(232,200,122,.18);
+      animation: floatCircle 6s ease-in-out infinite reverse;
+    }
+
+    /* petals */
+    .petal {
+      position: absolute;
+      opacity: .18;
+      pointer-events: none;
+    }
+    .petal svg { fill: var(--gold); }
+
+    .s0-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 0 24px;
+      animation: fadeUp .9s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(24px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    .s0-label {
+      font-size: 10px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+      animation: fadeUp .9s .15s ease both;
+    }
+
+    .s0-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 14vw, 96px);
+      font-weight: 300;
+      line-height: .95;
+      color: var(--cream);
+      letter-spacing: -.01em;
+      animation: fadeUp .9s .25s ease both;
+    }
+    .s0-name em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .s0-divider {
+      width: 40px; height: 1px;
+      background: var(--amber);
+      margin: 28px auto;
+      animation: expandLine .8s .5s ease both;
+    }
+    @keyframes expandLine {
+      from { width:0; opacity:0; }
+      to   { width:40px; opacity:1; }
+    }
+
+    .s0-message {
+      font-size: clamp(14px, 3.5vw, 17px);
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(245,240,232,.72);
+      max-width: 340px;
+      animation: fadeUp .9s .4s ease both;
+    }
+
+    .s0-heart {
+      margin-top: 32px;
+      font-size: 22px;
+      animation: heartbeat 1.6s ease-in-out infinite;
+    }
+    @keyframes heartbeat {
+      0%,100% { transform: scale(1); }
+      14%     { transform: scale(1.2); }
+      28%     { transform: scale(1); }
+      42%     { transform: scale(1.12); }
+      70%     { transform: scale(1); }
+    }
+
+    /* falling stars */
+    .stars {
+      position: absolute; inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .star {
+      position: absolute;
+      width: 2px; height: 2px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: twinkle var(--d,3s) var(--del,0s) ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%,100% { opacity:.1; transform:scale(.5); }
+      50%     { opacity:.7; transform:scale(1.4); }
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       SLIDE 1 — INDIZI
+    ════════════════════════════════════════════════════════════ */
+    .slide-1 {
+      background: var(--parchment);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 28px;
+    }
+
+    .s1-badge {
+      position: absolute;
+      top: 28px; right: 28px;
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: var(--moss);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      box-shadow: 0 4px 24px rgba(61,90,62,.3);
+      animation: rotateIn .8s ease both;
+    }
+    @keyframes rotateIn {
+      from { transform: rotate(-20deg) scale(.6); opacity:0; }
+      to   { transform: rotate(0) scale(1); opacity:1; }
+    }
+
+    .s1-eyebrow {
+      font-size: 10px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .s1-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 10vw, 64px);
+      font-weight: 600;
+      line-height: 1;
+      color: var(--ink);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .s1-title em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--moss);
+    }
+
+    .s1-sub {
+      font-size: 13px;
+      color: rgba(44,36,22,.55);
+      letter-spacing: .06em;
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .clues {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .clue {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: white;
+      border-radius: 14px;
+      padding: 16px 20px;
+      box-shadow: 0 2px 16px rgba(44,36,22,.07);
+      border-left: 3px solid var(--amber);
+      animation: slideRight .6s ease both;
+    }
+    .clue:nth-child(2) { animation-delay: .12s; }
+    .clue:nth-child(3) { animation-delay: .24s; }
+    .clue:nth-child(4) { animation-delay: .36s; }
+    @keyframes slideRight {
+      from { opacity:0; transform: translateX(-20px); }
+      to   { opacity:1; transform: translateX(0); }
+    }
+
+    .clue-icon {
+      font-size: 26px;
+      flex-shrink: 0;
+      width: 44px; height: 44px;
+      background: var(--cream);
+      border-radius: 10px;
+      display: flex; align-items:center; justify-content:center;
+    }
+
+    .clue-text {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+    .clue-text strong {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--amber);
+      margin-bottom: 2px;
+      font-weight: 500;
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       SLIDE 2 — FOTO
+    ════════════════════════════════════════════════════════════ */
+    .slide-2 {
+      background: var(--ink);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px 80px;
+      gap: 0;
+    }
+
+    .s2-header {
+      text-align: center;
+      margin-bottom: 24px;
+      z-index: 2;
+    }
+    .s2-label {
+      font-size: 10px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--sage);
+      display: block;
+      margin-bottom: 10px;
+    }
+    .s2-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(30px, 8vw, 52px);
+      font-weight: 300;
+      color: var(--cream);
+      font-style: italic;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 170px 130px;
+      gap: 10px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .photo-card {
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+    .photo-card:first-child {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      border-radius: 18px;
+    }
+
+    .photo-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .6s ease;
+    }
+    .photo-card:hover img { transform: scale(1.04); }
+
+    .photo-card::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(30,20,8,.6) 0%, transparent 60%);
+      border-radius: inherit;
+    }
+
+    .photo-caption {
+      position: absolute;
+      bottom: 10px; left: 14px;
+      z-index: 2;
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,.8);
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       SLIDE 3 — CTA
+    ════════════════════════════════════════════════════════════ */
+    .slide-3 {
+      background: var(--moss);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 28px;
+      text-align: center;
+    }
+
+    /* big decorative horseshoe shape */
+    .horseshoe-bg {
+      position: absolute;
+      width: min(90vw, 500px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 60px solid rgba(255,255,255,.04);
+      pointer-events: none;
+      animation: floatCircle 7s ease-in-out infinite;
+    }
+
+    .s3-stamp {
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.12);
+      backdrop-filter: blur(6px);
+      border: 1.5px solid rgba(255,255,255,.2);
+      display: flex; align-items:center; justify-content:center;
+      font-size: 40px;
+      margin-bottom: 28px;
+      animation: fadeUp .8s ease both;
+    }
+
+    .s3-eyebrow {
+      font-size: 10px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      animation: fadeUp .8s .1s ease both;
+    }
+
+    .s3-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(34px, 9vw, 60px);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1.1;
+      margin-bottom: 16px;
+      animation: fadeUp .8s .2s ease both;
+    }
+    .s3-title em {
+      font-style: italic;
+      font-weight: 600;
+    }
+
+    .s3-body {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(245,240,232,.75);
+      max-width: 320px;
+      margin-bottom: 40px;
+      animation: fadeUp .8s .3s ease both;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gold);
+      color: var(--ink);
+      text-decoration: none;
+      padding: 16px 32px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      box-shadow: 0 8px 32px rgba(232,200,122,.35);
+      transition: transform .25s ease, box-shadow .25s ease;
+      animation: fadeUp .8s .4s ease both;
+    }
+    .cta-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 14px 40px rgba(232,200,122,.5);
+    }
+    .cta-btn svg { width:18px; height:18px; }
+
+    .s3-note {
+      margin-top: 20px;
+      font-size: 11px;
+      color: rgba(245,240,232,.4);
+      letter-spacing: .06em;
+      animation: fadeUp .8s .5s ease both;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PROGRESS DOTS -->
+  <nav class="dots" id="dots">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </nav>
+
+  <!-- SLIDER -->
+  <div class="slider" id="slider">
+
+    <!-- ══ SLIDE 0 — LANDING ══════════════════════════════════ -->
+    <section class="slide slide-0 grain">
+      <div class="stars" id="stars"></div>
+      <div class="s0-ring"></div>
+      <div class="s0-circle"></div>
+
+      <!-- petals -->
+      <svg class="petal" style="top:8%;left:10%;width:60px" viewBox="0 0 60 60"><ellipse cx="30" cy="30" rx="10" ry="28" transform="rotate(30 30 30)"/></svg>
+      <svg class="petal" style="bottom:12%;right:8%;width:44px" viewBox="0 0 60 60"><ellipse cx="30" cy="30" rx="10" ry="28" transform="rotate(-45 30 30)"/></svg>
+      <svg class="petal" style="top:20%;right:16%;width:32px;opacity:.1" viewBox="0 0 60 60"><ellipse cx="30" cy="30" rx="10" ry="28" transform="rotate(70 30 30)"/></svg>
+
+      <div class="s0-content">
+        <p class="s0-label">✦ Un regalo speciale per te ✦</p>
+        <h1 class="s0-name">
+          Buon<br>
+          <em>Compleanno</em>
+        </h1>
+        <!-- ✏️  PERSONALIZZA: sostituisci "Nome" con il nome della tua ragazza -->
+        <!-- <p class="s0-name" style="font-size:clamp(28px,7vw,48px);margin-top:8px;color:var(--gold)">Nome ♡</p> -->
+        <div class="s0-divider"></div>
+        <p class="s0-message">
+          Scorri verso destra per scoprire<br>cosa ti ho preparato…
+        </p>
+        <div class="s0-heart">🤍</div>
+      </div>
+
+      <div class="swipe-hint">
+        swipe
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 1 — INDIZI ═══════════════════════════════════ -->
+    <section class="slide slide-1">
+      <div class="s1-badge">🗺️</div>
+
+      <p class="s1-eyebrow">✦ Indizio dopo indizio ✦</p>
+      <h2 class="s1-title">La tua<br><em>sorpresa</em></h2>
+      <p class="s1-sub">Riesci ad indovinare cosa ti aspetta?</p>
+
+      <div class="clues">
+        <div class="clue">
+          <div class="clue-icon">🏔️</div>
+          <div class="clue-text">
+            <strong>La meta</strong>
+            Siamo su un famoso lago lombardo, circondati dalle Alpi (dai che sei molto brava in geografia)
+          </div>
+        </div>
+        <div class="clue">
+          <div class="clue-icon">🌊</div>
+          <div class="clue-text">
+            <strong>Il posto</strong>
+            Un paese che guarda le acque con le montagne alle spalle, l'hanno citato anche in un famoso romanzo...
+          </div>
+        </div>
+        <div class="clue">
+          <div class="clue-icon">🐴</div>
+          <div class="clue-text">
+            <strong>L'attività</strong>
+            Quattro zampe, zoccoli, un manto lucido e una vista mozzafiato
+          </div>
+        </div>
+        <div class="clue">
+          <div class="clue-icon">🌿</div>
+          <div class="clue-text">
+            <strong>La sensazione</strong>
+            Aria fresca, ritmo lento e la natura tutta intorno
+          </div>
+        </div>
+      </div>
+
+      <div class="swipe-hint" style="color:rgba(44,36,22,.4)">
+        swipe
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 2 — FOTO ══════════════════════════════════════ -->
+    <section class="slide slide-2 grain">
+      <div class="s2-header">
+        <span class="s2-label">✦ Ecco dove andiamo ✦</span>
+        <h2 class="s2-title">Colico,<br>Lago di Como</h2>
+      </div>
+
+      <div class="photo-grid">
+        <!-- 
+          ✏️  PERSONALIZZA: puoi sostituire questi URL con foto tue.
+          Le immagini qui sotto sono via Unsplash (libere da copyright).
+        -->
+        <div class="photo-card">
+          <img
+            src="./imgs/cavallo.jpg"
+            alt="Cavalli al galoppo"
+            loading="eager"
+          />
+          <span class="photo-caption">A cavallo</span>
+        </div>
+        <div class="photo-card">
+          <img
+            src="./imgs/lago.jpg"
+            alt="Lago di Como"
+            loading="lazy"
+          />
+          <span class="photo-caption">Il lago</span>
+        </div>
+        <div class="photo-card">
+          <img
+            src="./imgs/alpi.jpg"
+            alt="Montagne"
+            loading="lazy"
+          />
+          <span class="photo-caption">Le Alpi</span>
+        </div>
+      </div>
+
+      <div class="swipe-hint">
+        swipe
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+    </section>
+
+    <!-- ══ SLIDE 3 — CTA ═══════════════════════════════════════ -->
+    <section class="slide slide-3 grain">
+      <div class="horseshoe-bg"></div>
+
+      <div class="s3-stamp">🐴</div>
+      <p class="s3-eyebrow">✦ Il tuo regalo ✦</p>
+      <h2 class="s3-title">
+        Gita a cavallo<br>
+        a <em>Colico</em>
+      </h2>
+      <p class="s3-body">
+        Una passeggiata a cavallo tra le rive del Lago di Como e i sentieri alpini di Colico.
+        Solo per te e per me.
+      </p>
+
+      <a
+        href="https://visitcolico.it/sport-e-divertimento/a-cavallo-per-colico/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="cta-btn"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+          <circle cx="12" cy="9" r="2.5"/>
+        </svg>
+        prenotiamo coi soldi del Saverz!
+      </a>
+      <p class="s3-note">visitcolico.it</p>
+    </section>
+
+  </div><!-- /slider -->
+
+  <script>
+    /* ── STARS ──────────────────────────────────────────────── */
+    const starsEl = document.getElementById('stars');
+    for (let i = 0; i < 40; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      s.style.cssText = `
+        left:${Math.random()*100}%;
+        top:${Math.random()*100}%;
+        --d:${2 + Math.random()*4}s;
+        --del:${Math.random()*4}s;
+      `;
+      starsEl.appendChild(s);
+    }
+
+    /* ── DOTS ───────────────────────────────────────────────── */
+    const slider = document.getElementById('slider');
+    const dots   = document.querySelectorAll('.dot');
+
+    const updateDots = () => {
+      const idx = Math.round(slider.scrollLeft / slider.clientWidth);
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    };
+
+    slider.addEventListener('scroll', updateDots, { passive: true });
+
+    /* ── KEYBOARD ───────────────────────────────────────────── */
+    document.addEventListener('keydown', e => {
+      const w = slider.clientWidth;
+      if (e.key === 'ArrowRight') slider.scrollBy({ left:  w, behavior: 'smooth' });
+      if (e.key === 'ArrowLeft')  slider.scrollBy({ left: -w, behavior: 'smooth' });
+    });
+
+    /* ── HIDE HINT AFTER FIRST SWIPE ────────────────────────── */
+    slider.addEventListener('scroll', () => {
+      document.querySelectorAll('.swipe-hint').forEach(h => {
+        h.style.opacity = slider.scrollLeft > 20 ? '0' : '';
+      });
+    }, { once: true });
+  </script>
+
+</body>
+</html>
