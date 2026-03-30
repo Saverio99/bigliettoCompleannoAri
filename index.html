@@ -36,9 +36,7 @@
       display: flex;
       width: 100vw;
       height: 100dvh;
-      overflow-x: scroll;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
+      overflow: hidden;   /* JS controls scrolling, no native scroll */
       scrollbar-width: none;
     }
     .slider::-webkit-scrollbar { display: none; }
@@ -46,7 +44,6 @@
     .slide {
       flex: 0 0 100vw;
       height: 100dvh;
-      scroll-snap-align: start;
       position: relative;
       overflow: hidden;
     }
@@ -706,30 +703,68 @@
       starsEl.appendChild(s);
     }
 
-    /* ── DOTS ───────────────────────────────────────────────── */
-    const slider = document.getElementById('slider');
-    const dots   = document.querySelectorAll('.dot');
+    /* ── SLIDER STATE ───────────────────────────────────────── */
+    const slider     = document.getElementById('slider');
+    const dots       = document.querySelectorAll('.dot');
+    const SLIDES     = slider.querySelectorAll('.slide').length;
+    const THRESHOLD  = 40;   // min px to trigger slide change
+    let   current    = 0;
+    let   isAnimating = false;
 
-    const updateDots = () => {
-      const idx = Math.round(slider.scrollLeft / slider.clientWidth);
-      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    const goTo = (idx) => {
+      if (isAnimating) return;
+      idx = Math.max(0, Math.min(SLIDES - 1, idx));
+      if (idx === current) return;
+      current = idx;
+      isAnimating = true;
+
+      slider.scrollTo({ left: current * slider.clientWidth, behavior: 'smooth' });
+      dots.forEach((d, i) => d.classList.toggle('active', i === current));
+
+      // hide swipe hint after first navigation
+      document.querySelectorAll('.swipe-hint').forEach(h => h.style.opacity = '0');
+
+      // unlock after transition ends
+      setTimeout(() => { isAnimating = false; }, 500);
     };
 
-    slider.addEventListener('scroll', updateDots, { passive: true });
+    /* ── TOUCH ──────────────────────────────────────────────── */
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let lockAxis    = null;   // 'x' | 'y' | null
+
+    slider.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      lockAxis = null;
+    }, { passive: true });
+
+    slider.addEventListener('touchmove', e => {
+      const dx = e.touches[0].clientX - touchStartX;
+      const dy = e.touches[0].clientY - touchStartY;
+
+      // determine dominant axis on first significant move
+      if (!lockAxis && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+        lockAxis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      }
+
+      // block native horizontal scroll so the page doesn't drift
+      if (lockAxis === 'x') e.preventDefault();
+    }, { passive: false });
+
+    slider.addEventListener('touchend', e => {
+      if (lockAxis !== 'x') return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > THRESHOLD) {
+        goTo(current + (dx < 0 ? 1 : -1));
+      }
+    });
 
     /* ── KEYBOARD ───────────────────────────────────────────── */
     document.addEventListener('keydown', e => {
-      const w = slider.clientWidth;
-      if (e.key === 'ArrowRight') slider.scrollBy({ left:  w, behavior: 'smooth' });
-      if (e.key === 'ArrowLeft')  slider.scrollBy({ left: -w, behavior: 'smooth' });
+      if (e.key === 'ArrowRight') goTo(current + 1);
+      if (e.key === 'ArrowLeft')  goTo(current - 1);
     });
-
-    /* ── HIDE HINT AFTER FIRST SWIPE ────────────────────────── */
-    slider.addEventListener('scroll', () => {
-      document.querySelectorAll('.swipe-hint').forEach(h => {
-        h.style.opacity = slider.scrollLeft > 20 ? '0' : '';
-      });
-    }, { once: true });
   </script>
 
 </body>
